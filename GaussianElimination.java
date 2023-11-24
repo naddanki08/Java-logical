@@ -1,4 +1,3 @@
-package com.nagesh.dsa.linkedlist;
 
 public class GaussianElimination {
 
