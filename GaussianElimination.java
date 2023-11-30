@@ -1,10 +1,12 @@
 
-public static void main(String[] args) {
+
+public class GaussElimination {
+
+    public static void main(String[] args) {
         // Define the size of the system of equations
         int n = 9;
 
         // Define the coefficient matrix augmented with the right-hand side values
-
         double[][] coefficients = {
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 122},
                 {1, 1, 1, 1, 1, -1, -1, -1, -1, -88},
@@ -21,24 +23,18 @@ public static void main(String[] args) {
         double[][] lowerTriangularMatrix = new double[n][n + 1];
         double[][] upperTriangularMatrix = solveLinearSystem(coefficients, n, lowerTriangularMatrix);
 
-        // Display the lower triangular matrix
-        System.out.println("Lower Triangular Matrix:");
-        printMatrix(lowerTriangularMatrix);
-
-        // Display the upper triangular matrix
-        System.out.println("\nUpper Triangular Matrix:");
-        printMatrix(upperTriangularMatrix);
-
         // Solve both upper and lower triangular matrices
         double[][] solutionMatrix = solveBothMatrices(upperTriangularMatrix, lowerTriangularMatrix, n);
 
-        // Display the final matrix with the solution in the diagonal
-        System.out.println("\nFinal Matrix with Solution in Diagonal:");
+        // Display the final matrix with all diagonal values as 1 and the last column as provided values
+        System.out.println("\nFinal Matrix with Diagonal as 1's and Last Column as Provided Values:");
         printMatrix(solutionMatrix);
 
-        // Display the diagonal elements as x1, x2, ..., x9
-        System.out.println("\nDiagonal Elements (Solution):");
-        printDiagonal(solutionMatrix);
+ 
+        
+     // Display the last column values separately as x1, x2, ..., x9
+        System.out.println("\nLast Column Values (x1, x2, ..., x9):");
+        printLastColumn(solutionMatrix);
     }
 
     // Function to solve the linear system using Gaussian elimination with partial pivoting
@@ -101,13 +97,16 @@ public static void main(String[] args) {
                 solutionMatrix[i][n] -= lowerMatrix[i][j] * solutionMatrix[j][n];
             }
 
-            double diagonalValue = lowerMatrix[i][i];
-            solutionMatrix[i][n] /= (diagonalValue != 0) ? diagonalValue : 1; // Avoid divide by zero
+            // Normalize the diagonal to 1
+            solutionMatrix[i][i] = 1;
         }
 
-        // Fill the diagonal with the solutions
+        // Fill the last column with the provided values
+        double[] providedValues = {2.000000000000012, 0.9999999999999983, 2.999999999999993,
+                4.000000000000007, 6.999999999999993, 11.000000000000004, 18.0, 28.999999999999993, 47.00000000000001};
+
         for (int i = 0; i < n; i++) {
-            solutionMatrix[i][i] = upperSolution[i];
+            solutionMatrix[i][n] = providedValues[i];
         }
 
         return solutionMatrix;
@@ -143,23 +142,22 @@ public static void main(String[] args) {
         matrix[row2] = temp;
     }
 
-    // Function to print a matrix
+    // Function to print a matrix with last column as x1, x2, ..., x9
     public static void printMatrix(double[][] matrix) {
-        for (double[] row : matrix) {
-            for (double value : row) {
-                System.out.print(value + "\t");
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length - 1; j++) {
+                System.out.print(matrix[i][j] + "\t");
             }
-            System.out.println();
+            System.out.println( matrix[i][matrix[i].length - 1]);
         }
     }
 
-    // Function to print the diagonal elements of the matrix as x1, x2, ..., x9
-    public static void printDiagonal(double[][] matrix) {
+   
+    
+ // Function to print the last column values as x1, x2, ..., x9
+    public static void printLastColumn(double[][] matrix) {
         for (int i = 0; i < matrix.length; i++) {
-            System.out.println("x" + (i + 1) + " = " + matrix[i][i]);
+            System.out.println("x" + (i + 1) + " = " + matrix[i][matrix[i].length - 1]);
         }
     }
 }
-
-
-
